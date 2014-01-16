@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+    <head>
+        <meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <script src="http://www.learnosity.com/static/js/jquery-1.10.2.min.js"></script>
+    </head>
+    <body>
+        <h1 id="date"></h1>
+        <ul>
+            <li id="question">N/A</li>
+        </ul>
+        <script type="text/javascript">
+            var a = function(data){
+                $('#date').text(new Date());
+                $('#question').text(data.rows[0][0]);
+                console.log(data);
+            };
+            var getRealTimeData = function() {
+                $.ajax({
+                    method: 'get',
+                    dataType: "jsonp",
+                    url: "https://lrn-analytics.appspot.com/query?id=ag9zfmxybi1hbmFseXRpY3NyFQsSCEFwaVF1ZXJ5GICAgICAgIAKDA&callback=a"
+                })
+            }
+            $(function(){
+                setInterval(getRealTimeData, 5000);
+            });
+        </script>
+    </body>
+</html>
