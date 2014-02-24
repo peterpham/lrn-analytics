@@ -1,0 +1,42 @@
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<h3></h3>
+<ul id="stats"></ul>
+
+<script type="text/javascript">
+
+    var date_interval = 30;
+    $('h3').text("Past " + date_interval + " days.");
+
+    var callsQuestionsAPI = function(data){
+        var result = data.totalResults === 0 ? 0 : data.rows[0][0];
+        $('#stats').append("<li>Call to Questions API: "+ result  +"</li>");
+    }
+    var countQuestionsRenders = function(data) {
+        var result = 0;
+        $(data.rows).each(function(index, row) {
+            var num_question_per_page = row[0],
+                pageview = row[1];
+            result += (num_question_per_page*pageview);
+        });
+        var questions_per_day = Math.round(result/date_interval);
+        $('#stats').append("<li>Questions rendered per day: "+ questions_per_day  +"</li>");
+    }
+    var teststart = function(data){
+        var result = data.totalResults === 0 ? 0 : data.rows[0][1];
+        $('#stats').append("<li>Test started: "+ result  +"</li>");
+    }
+    $(function(){
+        var endpoints = [
+            {callback: "callsQuestionsAPI", endpoint: "https://lrn-analytics2.appspot.com/query?id=ahBzfmxybi1hbmFseXRpY3MychULEghBcGlRdWVyeRiAgICAoMSOCQw"},
+            {callback: "countQuestionsRenders", endpoint: "https://lrn-analytics2.appspot.com/query?id=ahBzfmxybi1hbmFseXRpY3MychULEghBcGlRdWVyeRiAgICAwN-XCgw"},
+            {callback: "teststart", endpoint: "https://lrn-analytics2.appspot.com/query?id=ahBzfmxybi1hbmFseXRpY3MychULEghBcGlRdWVyeRiAgICAwLWbCgw"}
+        ];
+        $(endpoints).each(function(index, item){
+            $.ajax({
+                method: 'get',
+                dataType: "jsonp",
+                url: item.endpoint + "&callback=" + item.callback
+            });
+        });
+    });
+</script>
